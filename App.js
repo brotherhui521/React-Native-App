@@ -1,10 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Main from './components/MainComponent';
+import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
 
 export default function App() {
   return (
-    <Main/>
+    <NavigationContainer>
+      <Main/>
+    </NavigationContainer>
+    
   );
 }
 
