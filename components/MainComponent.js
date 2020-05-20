@@ -6,11 +6,13 @@ import Dishdetail from "./DishdetailComponent";
 import { createStackNavigator} from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Home from './HomeComponent';
+import Contact from './ContactComponent';
+import About from './AboutComponent';
 
-const Stack = createStackNavigator();
+const MenuStack = createStackNavigator();
 function MenuNavigator() {
   return (
-    <Stack.Navigator
+    <MenuStack.Navigator
       initialRouteName="Menu"
       screenOptions={{
         headerStyle: {
@@ -22,9 +24,9 @@ function MenuNavigator() {
         },
       }}
     >
-      <Stack.Screen name="Menu" component={Menu} />
-      <Stack.Screen name="Dishdetail" component={Dishdetail} />
-    </Stack.Navigator>
+      <MenuStack.Screen name="Menu" component={Menu} />
+      <MenuStack.Screen name="Dishdetail" component={Dishdetail} />
+    </MenuStack.Navigator>
   );
 }
 
@@ -47,6 +49,44 @@ function HomeNavigator(){
   )
 }
 
+const ContactStack = createStackNavigator();
+function ContactNavigator(){
+  return(
+    <ContactStack.Navigator
+    initialRouteName="Contact"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#512DA8",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}>
+        <ContactStack.Screen name="Contact" component={Contact}/>
+    </ContactStack.Navigator>
+  )
+}
+
+const AboutStack = createStackNavigator();
+function AboutNavigator(){
+  return(
+    <AboutStack.Navigator
+    
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#512DA8",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}>
+        <AboutStack.Screen name="About" component={About}/>
+    </AboutStack.Navigator>
+  )
+}
+
 
 const mainStack=createDrawerNavigator()
 function MainStack(){
@@ -56,6 +96,8 @@ function MainStack(){
     >
         <mainStack.Screen name="Home" component={HomeNavigator}/>
         <mainStack.Screen name="Menu" component={MenuNavigator}/>
+        <mainStack.Screen name="Contact" component={ContactNavigator}/>
+        <mainStack.Screen name="About" component={AboutNavigator}/>
     </mainStack.Navigator>
   )
 }
