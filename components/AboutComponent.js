@@ -1,8 +1,15 @@
 import React, { Component } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ScrollView } from "react-native";
 import { Card, ListItem } from "react-native-elements";
-import {LEADERS} from "../shared/leaders"
-import { DISHES } from '../shared/dishes.js';
+
+import { connect } from "react-redux";
+import { baseUrl } from "../shared/baseUrl";
+
+const mapStateToProps = (state) => {
+  return {
+    leaders: state.leaders,
+  };
+};
 
 function History() {
   return (
@@ -25,42 +32,32 @@ function History() {
 }
 
 class About extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      leaders: LEADERS,
-      dishes: DISHES
-    };
-  }
-
-  
   render() {
-    const renderLeaderItem = ({item, index}) => {
-        return (
-            <ListItem
-            key={index}
-            title={item.name}
-            subtitle={item.description}
-            hideChevron={true}           
-            leftAvatar={{ source: require('./images/alberto.png')}}
-          />
-        );
-    }
-
-    
-    return (
-        <View>
-        <History/>
-        <Card title="Corporate Leadership">
-        <FlatList 
-            data={this.state.leaders}
-            renderItem={renderLeaderItem}
-            keyExtractor={item => item.id.toString()}
+    const renderLeaderItem = ({ item, index }) => {
+      return (
+        <ListItem
+          key={index}
+          title={item.name}
+          subtitle={item.description}
+          hideChevron={true}
+          leftAvatar={{ source: { uri: baseUrl + item.image } }}
         />
+      );
+    };
+
+    return (
+      <ScrollView>
+        <History />
+        <Card title="Corporate Leadership">
+          <FlatList
+            data={this.props.leaders.leaders}
+            renderItem={renderLeaderItem}
+            keyExtractor={(item) => item.id.toString()}
+          />
         </Card>
-        </View>
+      </ScrollView>
     );
   }
 }
 
-export default About;
+export default connect(mapStateToProps)(About);

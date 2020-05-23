@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { DISHES } from '../shared/dishes.js';
 import Dishdetail from './DishdetailComponent';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
+
+const mapStateToProps = state => {
+    return {
+      dishes: state.dishes
+    }
+  }
 
 class Menu extends Component {
-    constructor(props){
-        super(props);
-        this.state={
-            dishes: DISHES
-        }
-    }
     
     render(){
         const renderMenuItem = ({item, index}) => {
@@ -21,7 +22,7 @@ class Menu extends Component {
                 subtitle={item.description}
                 hideChevron={true}
                 onPress={()=>navigate('Dishdetail',{dishId: item.id})}
-                leftAvatar={{ source: require('./images/uthappizza.png')}}
+                leftAvatar={{ source: {uri:baseUrl+item.image}}}
               />
             );
         }
@@ -30,7 +31,7 @@ class Menu extends Component {
         return (
             
             <FlatList 
-                data={this.state.dishes}
+                data={this.props.dishes.dishes}
                 renderItem={renderMenuItem}
                 keyExtractor={item => item.id.toString()}
             />
@@ -38,5 +39,5 @@ class Menu extends Component {
     }
 }
  
-export default Menu;
+export default connect(mapStateToProps)(Menu);
 

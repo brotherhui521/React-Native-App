@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Menu from "./MenuComponent";
-import { DISHES } from "../shared/dishes";
 import {
   View,
   ScrollView,
@@ -16,6 +15,24 @@ import { createDrawerNavigator, DrawerItemList } from "@react-navigation/drawer"
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
+import { connect } from 'react-redux';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchDishes: () => dispatch(fetchDishes()),
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
+})
 
 const CustomDrawerContentComponent = (props) => (
   <ScrollView>
@@ -176,7 +193,7 @@ function MainStack() {
   return (
     <mainStack.Navigator
       initialRouteName="Home"
-      drawerStyle="slide"
+      drawerStyle="back"
       drawerStyle={{ backgroundColor: "#D1C4E9" }}
       drawerContent={CustomDrawerContentComponent}
     >
@@ -230,12 +247,11 @@ function MainStack() {
   );
 }
 class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dishes: DISHES,
-      selectedDish: null,
-    };
+  componentDidMount() {
+    this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   render() {
@@ -267,4 +283,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Main;
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
