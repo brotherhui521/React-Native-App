@@ -15,6 +15,7 @@ import { createDrawerNavigator, DrawerItemList } from "@react-navigation/drawer"
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
+import Reservation from "./ReservationComponent";
 import { connect } from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
 
@@ -188,6 +189,39 @@ function AboutNavigator() {
   );
 }
 
+const ReserveStack = createStackNavigator();
+function ReserveNavigator() {
+  return (
+    <ReserveStack.Navigator
+      initialRouteName="Reservation"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#512DA8",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+      <ReserveStack.Screen
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={24}
+              color="white"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+        name="Reservation"
+        component={Reservation}
+      />
+    </ReserveStack.Navigator>
+  );
+}
+
 const mainStack = createDrawerNavigator();
 function MainStack() {
   return (
@@ -236,6 +270,20 @@ function MainStack() {
           drawerIcon: ({ tintColor, focused }) => (
             <Icon
               name="info-circle"
+              type="font-awesome"
+              size={24}
+              color={tintColor}
+            />
+          ),
+        }}
+      />
+      <mainStack.Screen
+        name="Reservation"
+        component={ReserveNavigator}
+        options={{
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon
+              name="cutlery"
               type="font-awesome"
               size={24}
               color={tintColor}
