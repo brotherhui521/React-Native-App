@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Menu from "./MenuComponent";
+import Favorites from "./FavoritesComponent";
 import {
   View,
   ScrollView,
@@ -88,6 +89,40 @@ function MenuNavigator() {
       />
       <MenuStack.Screen name="Dishdetail" component={Dishdetail} />
     </MenuStack.Navigator>
+  );
+}
+
+const FavoritesStack = createStackNavigator();
+function FavoritesNavigator() {
+  return (
+    <FavoritesStack.Navigator
+      initialRouteName="Favorites"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#512DA8",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+      <FavoritesStack.Screen
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={24}
+              color="white"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+        name="My Favorites"
+        component={Favorites}
+      />
+      <FavoritesStack.Screen name="Dishdetail" component={Dishdetail} />
+    </FavoritesStack.Navigator>
   );
 }
 
@@ -247,6 +282,17 @@ function MainStack() {
           drawerIcon: ({ tintColor, focused }) => (
             <Icon name="list" type="font-awesome" size={24} color={tintColor} />
           ),
+          drawerLabel:"Menu"
+        }}
+      />
+      <mainStack.Screen
+        name="Favorites"
+        component={FavoritesNavigator}
+        options={{
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon name="heart" type="font-awesome" size={24} color={tintColor} />
+          ),
+          drawerLabel:"My Favorites"
         }}
       />
       <mainStack.Screen
@@ -275,6 +321,7 @@ function MainStack() {
               color={tintColor}
             />
           ),
+          drawerLabel:"About Us"
         }}
       />
       <mainStack.Screen
