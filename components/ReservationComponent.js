@@ -8,6 +8,7 @@ import {
   Picker,
   Switch,
   StyleSheet,
+  Modal,
 } from "react-native";
 
 class Reservation extends Component {
@@ -15,17 +16,32 @@ class Reservation extends Component {
     super(props);
     this.state = {
       guests: 1,
-      smoking: true,
+      smoking: false,
       date: "",
+      showModal: false,
     };
   }
-  handleReservation(){
-      console.log(JSON.stringify(this.state));
-      this.setState({
-        guests: 1,
-        smoking: true,
-        date: "",
-      })
+  toggleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+
+  handleReservation() {
+    console.log(JSON.stringify(this.state));
+    this.toggleModal();
+  }
+
+  resetForm() {
+    this.setState({
+      guests: 1,
+      smoking: false,
+      date: "",
+      showModal: false,
+    });
+  }
+  handleReservation() {
+    console.log(JSON.stringify(this.state));
+
+    this.toggleModal();
   }
   render() {
     return (
@@ -51,7 +67,7 @@ class Reservation extends Component {
           <Text style={styles.formLabel}>Smoking/Non-smoking?</Text>
           <Switch
             style={styles.formItem}
-            style={{alignSelf:'flex-end'}}
+            style={{ alignSelf: "flex-end" }}
             value={this.state.smoking}
             onValueChange={(value) => this.setState({ smoking: value })}
             thumbColor="black"
@@ -62,11 +78,11 @@ class Reservation extends Component {
           <DatePicker
             style={{}}
             date={this.state.date}
-            mode="date"
+            mode="datetime"
             placeholder="select date"
-            format="YYYY-MM-DD"
-            minDate="2016-05-01"
-            maxDate="2016-06-01"
+            format="YYYY/MM/DD HH-MM a"
+            minDate="2020-01-01"
+            maxDate="2020-12-01"
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             customStyles={{
@@ -94,28 +110,60 @@ class Reservation extends Component {
             accessibilityLabel="Learn more about this purple button"
           ></Button>
         </View>
+        <Modal animationType = {"slide"} transparent = {false}
+                    visible = {this.state.showModal}
+                    
+                    onRequestClose = {() => this.toggleModal() }>
+                    <View style = {styles.modal}>
+                        <Text style = {styles.modalTitle}>Your Reservation</Text>
+                        <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
+                        <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'No' : 'Yes'}</Text>
+                        <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
+                        
+                        <Button 
+                            onPress = {() =>{this.toggleModal(); this.resetForm();}}
+                            color="#512DA8"
+                            title="Close" 
+                            />
+                    </View>
+                </Modal>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    formRow: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      flex: 1,
-      flexDirection: 'row',
-      margin: 20
-    },
-    formLabel: {
-        
-        fontSize: 18,
-        flex: 2
-    },
-    formItem: {
-        
-        right: 0,
-        flex: 1
-    }
+  formRow: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    flexDirection: "row",
+    margin: 20,
+  },
+  formLabel: {
+    fontSize: 18,
+    flex: 2,
+  },
+  formItem: {
+    right: 0,
+    flex: 1,
+  },
+  modal: {
+    justifyContent: 'center',
+    margin: 20,
+    marginTop: 60
+ },
+ modalTitle: {
+     fontSize: 24,
+     fontWeight: 'bold',
+     backgroundColor: '#512DA8',
+     textAlign: 'center',
+     color: 'white',
+     marginBottom: 20
+ },
+ modalText: {
+     fontSize: 18,
+     margin: 10
+ }
 });
 export default Reservation;
