@@ -74,13 +74,13 @@ class Reservation extends Component {
           ></Switch>
         </View>
         <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Date and Time</Text>
+          <Text style={{flex:1, fontSize:18}}>Date and Time</Text>
           <DatePicker
-            style={{}}
+            style={{flex:2}}
             date={this.state.date}
             mode="datetime"
-            placeholder="select date"
-            format="YYYY/MM/DD HH-MM a"
+            placeholder="select date and time"
+            format="YYYY/MM/DD HH:MM a"
             minDate="2020-01-01"
             maxDate="2020-12-01"
             confirmBtnText="Confirm"
@@ -110,23 +110,34 @@ class Reservation extends Component {
             accessibilityLabel="Learn more about this purple button"
           ></Button>
         </View>
-        <Modal animationType = {"slide"} transparent = {false}
-                    visible = {this.state.showModal}
-                    
-                    onRequestClose = {() => this.toggleModal() }>
-                    <View style = {styles.modal}>
-                        <Text style = {styles.modalTitle}>Your Reservation</Text>
-                        <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
-                        <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'No' : 'Yes'}</Text>
-                        <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
-                        
-                        <Button 
-                            onPress = {() =>{this.toggleModal(); this.resetForm();}}
-                            color="#512DA8"
-                            title="Close" 
-                            />
-                    </View>
-                </Modal>
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.showModal}
+          onRequestClose={() => this.toggleModal()}
+        >
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Your Reservation</Text>
+            <Text style={styles.modalText}>
+              Number of Guests: {this.state.guests}
+            </Text>
+            <Text style={styles.modalText}>
+              Smoking?: {this.state.smoking ? "No" : "Yes"}
+            </Text>
+            <Text style={styles.modalText}>
+              Date and Time: {this.state.date}
+            </Text>
+
+            <Button
+              onPress={() => {
+                this.toggleModal();
+                this.resetForm();
+              }}
+              color="#512DA8"
+              title="Close"
+            />
+          </View>
+        </Modal>
       </ScrollView>
     );
   }
@@ -149,21 +160,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modal: {
-    justifyContent: 'center',
+    justifyContent: "center",
     margin: 20,
-    marginTop: 60
- },
- modalTitle: {
-     fontSize: 24,
-     fontWeight: 'bold',
-     backgroundColor: '#512DA8',
-     textAlign: 'center',
-     color: 'white',
-     marginBottom: 20
- },
- modalText: {
-     fontSize: 18,
-     margin: 10
- }
+    marginTop: 60,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    backgroundColor: "#512DA8",
+    textAlign: "center",
+    color: "white",
+    marginBottom: 20,
+  },
+  modalText: {
+    fontSize: 18,
+    margin: 10,
+  },
 });
 export default Reservation;

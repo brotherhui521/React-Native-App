@@ -14,7 +14,7 @@ import { Card, Icon, Rating, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 
-import { postFavorite } from "../redux/ActionCreators";
+import { postFavorite, postComment } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
@@ -26,6 +26,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+  postComment: (dishId, rating, author, comment) =>
+    dispatch(postComment(dishId, rating, author, comment)),
 });
 
 function RenderComments(props) {
@@ -33,9 +35,18 @@ function RenderComments(props) {
 
   const RenderCommentItem = ({ item, index }) => {
     return (
-      <View key={index} style={{ margin: 10 }}>
-        <Text style={{ fontSize: 14 }}>{item.comment}</Text>
-        <Text style={{ fontSize: 12 }}>{item.ratings} starts</Text>
+      <View
+        style={{ alignItems: "flex-start" }}
+        key={index}
+        style={{ margin: 10 }}
+      >
+        <Text>{item.comment}</Text>
+        <Rating
+          style={{ alignItems: "flex-start" }}
+          readonly
+          imageSize={20}
+          startingValue={item.rating}
+        />
         <Text style={{ fontSize: 12 }}>
           {"--" + item.author + ",  --" + item.date}
         </Text>
@@ -87,27 +98,28 @@ function RenderDish(props) {
           onRequestClose={() => this.toggleModal()}
         >
           <View style={styles.formRow}>
-            <Rating
-              type="star"
-              imageSize={50}
-              startingValue={5}
-              showRating={true}
-              onFinishRating={(rating) => props.updateState("rating", rating)}
-            />
+            <View style={{ marginTop: 30 }}>
+              <Rating
+                type="star"
+                imageSize={50}
+                startingValue={5}
+                showRating={true}
+                onFinishRating={(rating) => props.updateState("rating", rating)}
+              />
+            </View>
           </View>
           <View style={styles.formRow}>
             <Input
               placeholder="Author"
               leftIcon={{ type: "font-awesome", name: "user" }}
-             
-              onChangeText={(value) => props.updateState("author",value)}
+              onChangeText={(value) => props.updateState("author", value)}
             />
           </View>
           <View style={styles.formRow}>
             <Input
               placeholder="Comment"
               leftIcon={{ type: "font-awesome", name: "comment" }}
-              onChangeText={(value) => props.updateState("comment",value)}
+              onChangeText={(value) => props.updateState("comment", value)}
             />
           </View>
           <View style={styles.formRow}>
@@ -173,7 +185,12 @@ class Dishdetail extends Component {
   }
   handleForm() {
     console.log(JSON.stringify(this.state));
-    
+    this.props.postComment(
+      this.props.route.params.dishId,
+      this.state.rating,
+      this.state.author,
+      this.state.comment
+    );
     this.resetForm();
     this.toggleModal();
   }
