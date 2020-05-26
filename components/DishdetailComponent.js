@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Modal,
   Button,
+  Alert,
+  PanResponder,
 } from "react-native";
 import { Card, Icon, Rating, Input } from "react-native-elements";
 
@@ -68,11 +70,50 @@ function RenderComments(props) {
 }
 
 function RenderDish(props) {
+  //panResonders
+  const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
+    if (dx < -200) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (e, gestureState) => {
+      return true;
+    },
+    onPanResponderEnd: (e, gestureState) => {
+      console.log("gesture end" + gestureState);
+      if (recognizeDrag(gestureState)) {
+        Alert.alert(
+          "Adding favorite",
+          "Are you sure you want to add " + dish.name + " to favorites?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Not add to favorite"),
+              type: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: () => {
+                props.favorite
+                  ? console.log("Already favorite")
+                  : props.onPress();
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+        return true;
+      }
+    },
+  });
   const dish = props.dish;
 
   if (dish != null) {
     return (
-      <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+      <Animatable.View animation="fadeInDown" duration={2000} delay={1000} {...panResponder.panHandlers}>
         <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
           <Text style={{ margin: 10 }}>{dish.description}</Text>
           <View style={styles.formRow}>
