@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, FlatList } from "react-native";
-import { ListItem } from "react-native-elements";
+import { ListItem , Tile} from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 import{Loading} from './LoadingComponent';
+import * as Animatable from "react-native-animatable";
 
 const mapStateToProps = (state) => {
   return {
@@ -15,14 +16,16 @@ class Menu extends Component {
   render() {
     const renderMenuItem = ({ item, index }) => {
       return (
-        <ListItem
+        <Animatable.View animation="fadeInRight" duration={2000}> 
+        <Tile
           key={index}
           title={item.name}
-          subtitle={item.description}
-          hideChevron={true}
+          caption={item.description}
+          featured
           onPress={() => navigate("Dishdetail", { dishId: item.id })}
-          leftAvatar={{ source: { uri: baseUrl + item.image } }}
+          imageSrc={{ uri: baseUrl + item.image  }}
         />
+        </Animatable.View>
       );
     };
 

@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 
 import { postFavorite, postComment } from "../redux/ActionCreators";
+import * as Animatable from "react-native-animatable";
 
 const mapStateToProps = (state) => {
   return {
@@ -54,13 +55,15 @@ function RenderComments(props) {
     );
   };
   return (
-    <Card title="Comments">
-      <FlatList
-        data={comments}
-        renderItem={RenderCommentItem}
-        keyExtractor={(item) => item.id.toString()}
-      ></FlatList>
-    </Card>
+    <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
+      <Card title="Comments">
+        <FlatList
+          data={comments}
+          renderItem={RenderCommentItem}
+          keyExtractor={(item) => item.id.toString()}
+        ></FlatList>
+      </Card>
+    </Animatable.View>
   );
 }
 
@@ -69,80 +72,86 @@ function RenderDish(props) {
 
   if (dish != null) {
     return (
-      <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
-        <Text style={{ margin: 10 }}>{dish.description}</Text>
-        <View style={styles.formRow}>
-          <Icon
-            raised
-            reverse
-            name={props.favorite ? "heart" : "heart-o"}
-            type="font-awesome"
-            color="#f50"
-            onPress={() =>
-              props.favorite ? console.log("Already favorite") : props.onPress()
-            }
-          />
-          <Icon
-            raised
-            reverse
-            name={"pencil"}
-            type="font-awesome"
-            color="#512D8A"
-            onPress={() => props.toggleModal()}
-          />
-        </View>
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={props.showModal}
-          onRequestClose={() => this.toggleModal()}
-        >
+      <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+        <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
+          <Text style={{ margin: 10 }}>{dish.description}</Text>
           <View style={styles.formRow}>
-            <View style={{ marginTop: 30 }}>
-              <Rating
-                type="star"
-                imageSize={50}
-                startingValue={5}
-                showRating={true}
-                onFinishRating={(rating) => props.updateState("rating", rating)}
+            <Icon
+              raised
+              reverse
+              name={props.favorite ? "heart" : "heart-o"}
+              type="font-awesome"
+              color="#f50"
+              onPress={() =>
+                props.favorite
+                  ? console.log("Already favorite")
+                  : props.onPress()
+              }
+            />
+            <Icon
+              raised
+              reverse
+              name={"pencil"}
+              type="font-awesome"
+              color="#512D8A"
+              onPress={() => props.toggleModal()}
+            />
+          </View>
+          <Modal
+            animationType={"slide"}
+            transparent={false}
+            visible={props.showModal}
+            onRequestClose={() => this.toggleModal()}
+          >
+            <View style={styles.formRow}>
+              <View style={{ marginTop: 30 }}>
+                <Rating
+                  type="star"
+                  imageSize={50}
+                  startingValue={5}
+                  showRating={true}
+                  onFinishRating={(rating) =>
+                    props.updateState("rating", rating)
+                  }
+                />
+              </View>
+            </View>
+            <View style={styles.formRow}>
+              <Input
+                placeholder="Author"
+                leftIcon={{ type: "font-awesome", name: "user" }}
+                onChangeText={(value) => props.updateState("author", value)}
               />
             </View>
-          </View>
-          <View style={styles.formRow}>
-            <Input
-              placeholder="Author"
-              leftIcon={{ type: "font-awesome", name: "user" }}
-              onChangeText={(value) => props.updateState("author", value)}
-            />
-          </View>
-          <View style={styles.formRow}>
-            <Input
-              placeholder="Comment"
-              leftIcon={{ type: "font-awesome", name: "comment" }}
-              onChangeText={(value) => props.updateState("comment", value)}
-            />
-          </View>
-          <View style={styles.formRow}>
-            <Button
-              color="#512DA8"
-              title="Continue"
-              onPress={() => {
-                props.handleForm();
-              }}
-            />
-          </View>
-          <View style={styles.formRow}>
-            <Button
-              color="#512DA8"
-              title="Cancel"
-              onPress={() => {
-                props.toggleModal();
-                props.resetForm();
-              }}
-            />
-          </View>
-        </Modal>
-      </Card>
+            <View style={styles.formRow}>
+              <Input
+                placeholder="Comment"
+                leftIcon={{ type: "font-awesome", name: "comment" }}
+                onChangeText={(value) => props.updateState("comment", value)}
+              />
+            </View>
+            <View style={styles.formRow}>
+              <Button
+                color="#512DA8"
+                title="Continue"
+                onPress={() => {
+                  props.handleForm();
+                }}
+              />
+            </View>
+            <View style={styles.formRow}>
+              <Button
+                color="#512DA8"
+                title="Cancel"
+                onPress={() => {
+                  props.toggleModal();
+                  props.resetForm();
+                }}
+              />
+            </View>
+          </Modal>
+        </Card>
+      </Animatable.View>
     );
   } else {
     return <View></View>;
