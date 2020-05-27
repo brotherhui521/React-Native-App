@@ -74,7 +74,7 @@ function RenderDish(props) {
 
   //panResonders
   const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
-    if (dx < -200) {
+    if (dx < -150) {
       return true;
     } else {
       return false;
@@ -283,11 +283,13 @@ class Dishdetail extends Component {
             this.handleForm();
           }}
         />
-        <RenderComments
-          comments={this.props.comments.comments.filter(
-            (comment) => comment.dishId === dishId
-          )}
-        />
+        
+          <RenderComments
+            comments={this.props.comments.comments.filter(
+              (comment) => comment.dishId === dishId
+            )}
+          />
+        
       </ScrollView>
     );
   }
