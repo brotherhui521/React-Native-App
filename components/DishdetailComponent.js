@@ -38,6 +38,7 @@ function RenderComments(props) {
 
   const RenderCommentItem = ({ item, index }) => {
     return (
+      
       <View
         style={{ alignItems: "flex-start" }}
         key={index}
@@ -80,6 +81,12 @@ function RenderDish(props) {
       return false;
     }
   };
+
+  const recognizeComment=({moveX, moveY, dx, dy})=>{
+    if(dx>150){
+      return true;
+    }else return false;
+  }
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (e, gestureState) => {
       return true;
@@ -109,6 +116,27 @@ function RenderDish(props) {
                 props.favorite
                   ? console.log("Already favorite")
                   : props.onPress();
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+        return true;
+      }
+      else if (recognizeComment(gestureState)) {
+        Alert.alert(
+          "Adding comment",
+          "Are you sure you want to add comment for" + dish.name,
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Not add comment"),
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: () => {
+                props.toggleModal()
               },
             },
           ],

@@ -33,7 +33,7 @@ class Favorites extends Component {
               [
                 {
                   text: "cancel",
-                  type: "cancel",
+                  style:'cancel',
                   onPress: () => console.log("not deleted"),
                 },
                 {
