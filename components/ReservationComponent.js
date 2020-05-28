@@ -10,8 +10,11 @@ import {
   StyleSheet,
   Modal,
   Alert,
+  Platform,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
 
 class Reservation extends Component {
   constructor(props) {
@@ -28,23 +31,71 @@ class Reservation extends Component {
   }
   */
 
+  async obtainNotificationPermission() {
+    let permission = await Permissions.getAsync(
+      Permissions.USER_FACING_NOTIFICATIONS
+    );
+    if (permission.status !== "granted") {
+      permission = await Permissions.askAsync(
+        Permissions.USER_FACING_NOTIFICATIONS
+      );
+      if (permission.status !== "granted") {
+        Alert.alert("Permission not granted to show notifications");
+      }
+    }
+    return permission;
+  }
+
+  async presentLocalNotification(date) {
+    await this.obtainNotificationPermission();
+    Notifications.presentLocalNotificationAsync({
+      title: "Your Reservation",
+      body: "Reservation for " + date + " requested",
+      ios: {
+        sound: true,
+        _displayInForeground: true,
+      },
+      android: {
+        sound: true,
+        vibrate: true,
+        color: "#512DA8",
+      },
+    });
+  }
+
+  handleNotification() {
+    console.log("Listener OK");
+  }
+
   handleReservation() {
     console.log(JSON.stringify(this.state));
     console.log(this.state.smoking);
-    
+
     Alert.alert(
       "Your Reservation OK?",
       "Number of guests: " +
         this.state.guests +
         "\n" +
         "Smoking? " +
-        +!this.state.smoking+
+        +!this.state.smoking +
         "\n" +
         "Date and Time: " +
         this.state.date,
       [
-        { text: "OK", onPress: () => this.resetForm() },
-        { text: "Cancel", style: "cancel", onPress: () => this.resetForm() },
+        {
+          text: "OK",
+          onPress: () => {
+            this.presentLocalNotification(this.state.date);
+            this.resetForm();
+          },
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+          onPress: () => {
+            this.resetForm();
+          },
+        },
       ],
       { cancelable: false }
     );
@@ -126,7 +177,6 @@ class Reservation extends Component {
               accessibilityLabel="Learn more about this purple button"
             ></Button>
           </View>
-          
         </ScrollView>
       </Animatable.View>
     );
