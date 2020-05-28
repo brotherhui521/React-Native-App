@@ -12,29 +12,38 @@ import {
 import { Icon } from "react-native-elements";
 import Dishdetail from "./DishdetailComponent";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator, DrawerItemList } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
 import Reservation from "./ReservationComponent";
-import { connect } from 'react-redux';
-import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+import Login from "./LoginComponent";
+import { connect } from "react-redux";
+import {
+  fetchDishes,
+  fetchComments,
+  fetchPromos,
+  fetchLeaders,
+} from "../redux/ActionCreators";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     dishes: state.dishes,
     comments: state.comments,
     promotions: state.promotions,
-    leaders: state.leaders
-  }
-}
+    leaders: state.leaders,
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchDishes: () => dispatch(fetchDishes()),
   fetchComments: () => dispatch(fetchComments()),
   fetchPromos: () => dispatch(fetchPromos()),
   fetchLeaders: () => dispatch(fetchLeaders()),
-})
+});
 
 const CustomDrawerContentComponent = (props) => (
   <ScrollView>
@@ -53,7 +62,7 @@ const CustomDrawerContentComponent = (props) => (
           <Text style={styles.drawerHeaderText}>Ristorante Con Fusion</Text>
         </View>
       </View>
-      <DrawerItemList {...props}/>
+      <DrawerItemList {...props} />
     </SafeAreaView>
   </ScrollView>
 );
@@ -257,6 +266,38 @@ function ReserveNavigator() {
   );
 }
 
+const LoginStack = createStackNavigator();
+function LoginNavigator() {
+  return (
+    <LoginStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#512DA8",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+      <LoginStack.Screen
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={24}
+              color="white"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+        name="Login"
+        component={Login}
+      />
+    </LoginStack.Navigator>
+  );
+}
+
 const mainStack = createDrawerNavigator();
 function MainStack() {
   return (
@@ -266,6 +307,16 @@ function MainStack() {
       drawerStyle={{ backgroundColor: "#D1C4E9" }}
       drawerContent={CustomDrawerContentComponent}
     >
+      <mainStack.Screen
+        name="Login"
+        component={LoginNavigator}
+        options={{
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon name="home" type="font-awesome" size={24} color={tintColor} />
+          ),
+          drawerLabel:"sign-in",
+        }}
+      />
       <mainStack.Screen
         name="Home"
         component={HomeNavigator}
@@ -282,7 +333,7 @@ function MainStack() {
           drawerIcon: ({ tintColor, focused }) => (
             <Icon name="list" type="font-awesome" size={24} color={tintColor} />
           ),
-          drawerLabel:"Menu"
+          drawerLabel: "Menu",
         }}
       />
       <mainStack.Screen
@@ -290,9 +341,14 @@ function MainStack() {
         component={FavoritesNavigator}
         options={{
           drawerIcon: ({ tintColor, focused }) => (
-            <Icon name="heart" type="font-awesome" size={24} color={tintColor} />
+            <Icon
+              name="heart"
+              type="font-awesome"
+              size={24}
+              color={tintColor}
+            />
           ),
-          drawerLabel:"My Favorites"
+          drawerLabel: "My Favorites",
         }}
       />
       <mainStack.Screen
@@ -321,7 +377,7 @@ function MainStack() {
               color={tintColor}
             />
           ),
-          drawerLabel:"About Us"
+          drawerLabel: "About Us",
         }}
       />
       <mainStack.Screen
