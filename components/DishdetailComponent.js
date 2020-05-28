@@ -10,6 +10,7 @@ import {
   Button,
   Alert,
   PanResponder,
+  Share,
 } from "react-native";
 import { Card, Icon, Rating, Input } from "react-native-elements";
 
@@ -38,7 +39,6 @@ function RenderComments(props) {
 
   const RenderCommentItem = ({ item, index }) => {
     return (
-      
       <View
         style={{ alignItems: "flex-start" }}
         key={index}
@@ -82,11 +82,11 @@ function RenderDish(props) {
     }
   };
 
-  const recognizeComment=({moveX, moveY, dx, dy})=>{
-    if(dx>150){
+  const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+    if (dx > 150) {
       return true;
-    }else return false;
-  }
+    } else return false;
+  };
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (e, gestureState) => {
       return true;
@@ -122,8 +122,7 @@ function RenderDish(props) {
           { cancelable: false }
         );
         return true;
-      }
-      else if (recognizeComment(gestureState)) {
+      } else if (recognizeComment(gestureState)) {
         Alert.alert(
           "Adding comment",
           "Are you sure you want to add comment for" + dish.name,
@@ -136,7 +135,7 @@ function RenderDish(props) {
             {
               text: "OK",
               onPress: () => {
-                props.toggleModal()
+                props.toggleModal();
               },
             },
           ],
@@ -146,6 +145,16 @@ function RenderDish(props) {
       }
     },
   });
+  const shareDish = (title, message, url) => {
+    Share.share(
+      {
+        title: title,
+        message: title + ": " + message + " " + url,
+        url: url,
+      },
+      { dialogTitle: "Share" + title }
+    );
+  };
   const dish = props.dish;
 
   if (dish != null) {
@@ -179,6 +188,17 @@ function RenderDish(props) {
               type="font-awesome"
               color="#512D8A"
               onPress={() => props.toggleModal()}
+            />
+            <Icon
+              raised
+              reverse
+              name="share"
+              type="font-awesome"
+              color="#51D2A8"
+              style={styles.cardItem}
+              onPress={() =>
+                shareDish(dish.name, dish.description, baseUrl + dish.image)
+              }
             />
           </View>
           <Modal
@@ -311,13 +331,12 @@ class Dishdetail extends Component {
             this.handleForm();
           }}
         />
-        
-          <RenderComments
-            comments={this.props.comments.comments.filter(
-              (comment) => comment.dishId === dishId
-            )}
-          />
-        
+
+        <RenderComments
+          comments={this.props.comments.comments.filter(
+            (comment) => comment.dishId === dishId
+          )}
+        />
       </ScrollView>
     );
   }
