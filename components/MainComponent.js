@@ -270,6 +270,7 @@ const LoginStack = createStackNavigator();
 function LoginNavigator() {
   return (
     <LoginStack.Navigator
+      initialRouteName="Login"
       screenOptions={{
         headerStyle: {
           backgroundColor: "#512DA8",
@@ -294,6 +295,7 @@ function LoginNavigator() {
         name="Login"
         component={Login}
       />
+      
     </LoginStack.Navigator>
   );
 }
@@ -303,7 +305,7 @@ function MainStack() {
   return (
     <mainStack.Navigator
       initialRouteName="Home"
-      drawerStyle="back"
+      drawerType='slide'
       drawerStyle={{ backgroundColor: "#D1C4E9" }}
       drawerContent={CustomDrawerContentComponent}
     >
@@ -312,9 +314,9 @@ function MainStack() {
         component={LoginNavigator}
         options={{
           drawerIcon: ({ tintColor, focused }) => (
-            <Icon name="home" type="font-awesome" size={24} color={tintColor} />
+            <Icon name="user" type="font-awesome" size={24} color={tintColor} />
           ),
-          drawerLabel:"sign-in",
+          drawerLabel: "sign-in",
         }}
       />
       <mainStack.Screen
