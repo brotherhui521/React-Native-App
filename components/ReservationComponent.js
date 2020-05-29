@@ -15,6 +15,7 @@ import {
 import * as Animatable from "react-native-animatable";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
+import * as Calendar from "expo-calendar";
 
 class Reservation extends Component {
   constructor(props) {
@@ -86,6 +87,8 @@ class Reservation extends Component {
           text: "OK",
           onPress: () => {
             this.presentLocalNotification(this.state.date);
+            //add to calendar . ios need reminder permission too
+            this.addReservationToCalendar(this.state.date);
             this.resetForm();
           },
         },
@@ -99,6 +102,37 @@ class Reservation extends Component {
       ],
       { cancelable: false }
     );
+  }
+
+  async obtainCalendarPermission(){
+    const calendarPermission=await Calendar.requestCalendarPermissionsAsync();
+    if(calendarPermission.status==="granted"){
+      const reminderPermission=await Calendar.getCalendarPermissionsAsync();
+      if(reminderPermission.status==="granted"){
+        console.log("premission got");
+      }
+      
+    }
+  }
+
+  async addReservationToCalendar(date){
+    await this.obtainCalendarPermission();
+
+    const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+    const JSONdateString=JSON.stringify(date);  
+    const dateString=JSON.parse(JSONdateString);
+    console.log(date);
+    console.log(JSONdateString);
+    console.log(dateString);
+
+    Calendar.createEventAsync(defaultCalendar.id,{
+      title: "Con Fusion Table Reservation",
+      startDate: new Date(date),
+      endDate: new Date(new Date(date).getTime()+2*60*60*1000),
+      location:"121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kon",
+      timeZone:"Asia/Hong_Kong"
+      
+    })
   }
 
   resetForm() {
@@ -147,7 +181,7 @@ class Reservation extends Component {
               date={this.state.date}
               mode="datetime"
               placeholder="select date and time"
-              format="YYYY/MM/DD HH:MM a"
+              format=""
               minDate="2020-01-01"
               maxDate="2020-12-01"
               confirmBtnText="Confirm"
