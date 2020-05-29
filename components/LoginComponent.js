@@ -5,6 +5,7 @@ import * as SecureStore from "expo-secure-store";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import {baseUrl} from "../shared/baseUrl";
 import { color } from "react-native-reanimated";
 
@@ -138,10 +139,20 @@ class RegisterTab extends Component {
       });
       if (!result.cancelled) {
         console.log(result);
-        this.setState({ imageUrl: result.uri });
+        this.processImage(result.uri );
       }
     }
   };
+
+  processImage=async(imageUrl)=>{
+    let processedImage=await ImageManipulator.manipulateAsync(
+      imageUrl,
+      [{resize:{width: 400}}],
+      {format: 'png'}
+    );
+    console.log(processedImage);
+    this.setState({imageUrl: processedImage.uri})
+  }
 
   handleRegister() {
     console.log(JSON.stringify(this.state));
